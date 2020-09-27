@@ -7,7 +7,7 @@
 </head>
 <body>
 <<<<<<< HEAD
-    <?php echo "<p>Hello World! </p>"; ?> 
+    <?php echo "<p>Hello World ! </p>"; ?> 
 =======
     <?php echo "<p>Hello World 40</p>"; ?> 
 >>>>>>> e3be1f6704a344b4ef2e658ac73701e7512c040d
