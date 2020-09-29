@@ -1,0 +1,159 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  vpc04e5a31cf5a13cf5f:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      InstanceTenancy: default
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
+      Tags:
+        - Key: Name
+          Value: VPC-IA
+  subnet0ebf8938ba044eccf:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: sa-east-1a
+      VpcId: !Ref vpc04e5a31cf5a13cf5f
+      Tags:
+        - Key: Name
+          Value: VPC-IA-Public
+  igw031a7efe63cdc5680:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: VPA-IA-IG
+  dopt9e6909f9:
+    Type: 'AWS::EC2::DHCPOptions'
+    Properties:
+      DomainName: sa-east-1.compute.internal
+      DomainNameServers:
+        - AmazonProvidedDNS
+  rtb045a2c879fa36bd3d:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref vpc04e5a31cf5a13cf5f
+      Tags:
+        - Key: Name
+          Value: RT-IA
+  instancei0b02c906fb7fb097d:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      DisableApiTermination: 'false'
+      InstanceInitiatedShutdownBehavior: stop
+      ImageId: ami-02898a1921d38a50b
+      InstanceType: t2.micro
+      KeyName: app-hello-world
+      Monitoring: 'false'
+      Tags:
+        - Key: Name
+          Value: EC2-IA-helloworld
+      NetworkInterfaces:
+        - DeleteOnTermination: 'true'
+          Description: Primary network interface
+          DeviceIndex: 0
+          SubnetId: !Ref subnet0ebf8938ba044eccf
+          PrivateIpAddresses:
+            - PrivateIpAddress: 10.0.1.187
+              Primary: 'true'
+          GroupSet:
+            - !Ref sgEC2IAhelloworldSG
+          AssociatePublicIpAddress: 'true'
+      UserData:
+        Fn::Base64:
+          !Sub |
+            #!/bin/bash -xe
+            yum update -y aws-cfn-bootstrap
+            /opt/aws/bin/cfn-init -s ${AWS::StackId} -r instancei0b02c906fb7fb097d --region ${AWS::Region} || error_exit 'Falha ao rodar cfn-init'
+    Metadata:
+      Comment: Instalar docker
+      AWS::CloudFormation::Init:
+        config:
+          packages:
+            yum:
+              git: []
+              docker: []
+          files:
+            "/git/Dockerfile":
+              content: | 
+                FROM php:7.1-apache
+                COPY ./ /var/www/html
+                EXPOSE 80
+                CMD ["apache2-foreground"]
+              mode: '000777'
+          commands:
+            gitclone:
+              command: |
+                sudo git init
+                sudo git clone https://github.com/jerryjmp/TesteIA.git
+                sudo mv /git/Dockerfile /TesteIA
+                sudo cd /TesteIA
+                sudo systemctl start docker
+                sudo docker build -t app_hello_world /TesteIA/
+                sudo docker run -p 80:80 -d app_hello_world
+          services:
+            sysvinit:
+              docker:
+                enabled: 'true'
+                ensureRunning: 'true'
+
+  sgEC2IAhelloworldSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: EC2-IA-helloworld-SG
+      VpcId: !Ref vpc04e5a31cf5a13cf5f
+  gw1:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: !Ref vpc04e5a31cf5a13cf5f
+      InternetGatewayId: !Ref igw031a7efe63cdc5680
+  subnetroute1:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref rtb045a2c879fa36bd3d
+      SubnetId: !Ref subnet0ebf8938ba044eccf
+  route1:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      RouteTableId: !Ref rtb045a2c879fa36bd3d
+      GatewayId: !Ref igw031a7efe63cdc5680
+    DependsOn: gw1
+  dchpassoc1:
+    Type: 'AWS::EC2::VPCDHCPOptionsAssociation'
+    Properties:
+      VpcId: !Ref vpc04e5a31cf5a13cf5f
+      DhcpOptionsId: !Ref dopt9e6909f9
+  ingress1:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref sgEC2IAhelloworldSG
+      IpProtocol: tcp
+      FromPort: '80'
+      ToPort: '80'
+      CidrIp: 0.0.0.0/0
+  ingress2:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref sgEC2IAhelloworldSG
+      IpProtocol: tcp
+      FromPort: '22'
+      ToPort: '22'
+      CidrIp: 0.0.0.0/0
+  ingress3:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref sgEC2IAhelloworldSG
+      IpProtocol: tcp
+      FromPort: '443'
+      ToPort: '443'
+      CidrIp: 0.0.0.0/0
+  egress1:
+    Type: 'AWS::EC2::SecurityGroupEgress'
+    Properties:
+      GroupId: !Ref sgEC2IAhelloworldSG
+      IpProtocol: '-1'
+      CidrIp: 0.0.0.0/0
+Description: Template IA CFN
