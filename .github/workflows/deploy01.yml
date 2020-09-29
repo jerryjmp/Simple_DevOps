@@ -3,8 +3,6 @@ on:
     branches:
       - master
 
-name: Deploy
-
 jobs:
   # Deploy infrastructure resources like ECR repository and load balancer.
   # This job will run on every code change to the master branch, but will only deploy
