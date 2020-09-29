@@ -46,3 +46,6 @@ jobs:
         template: infraaws-template-ia.yml
         role-arn: arn:aws:iam::${{ steps.creds.outputs.aws-account-id }}:role/github-actions-cloudformation-stack-role
         no-fail-on-empty-changeset: "1"
+        parameter-overrides: >-
+          EnvironmentName=${{ steps.env-name.outputs.environment }}
+        
