@@ -1,5 +1,7 @@
-on: push
-name: Deploy
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   # Deploy infrastructure resources like ECR repository and load balancer.
