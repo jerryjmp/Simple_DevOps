@@ -52,7 +52,7 @@ $ git push
 
 ![image](https://user-images.githubusercontent.com/55636741/94654286-39711780-02d3-11eb-9403-104bc417129e.png)
 
-# Monitação
+# Monitoração
 * Será utilizada a ferramenta Amazon CloudWatch com as métricas padrão para o website Hello World. 
 
 
