@@ -45,7 +45,6 @@ Resources:
       InstanceInitiatedShutdownBehavior: stop
       ImageId: ami-02898a1921d38a50b
       InstanceType: t2.micro
-      KeyName: app-hello-world
       Monitoring: 'false'
       Tags:
         - Key: Name
