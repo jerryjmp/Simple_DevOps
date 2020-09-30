@@ -19,9 +19,9 @@ De:
                 sudo systemctl start docker
                 sudo docker build -t app_hello_world /TesteIA/
 ```
-            
+```sh             
     Para:       
-```sh           sudo git clone https://github.com/Sua_Conta/Seu_Repositorio.git
+                sudo git clone https://github.com/Sua_Conta/Seu_Repositorio.git
                 sudo mv /git/Dockerfile /Seu_Repositorio
                 sudo cd /Seu_Repositorio
                 sudo systemctl start docker
