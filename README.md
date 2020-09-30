@@ -1,177 +1,86 @@
-# Teste Devops 
+# Teste DevOps
+Descrição:
+Este repositório contém um simples website com um fluxo de trabalho, sendo iniciado após atualização do repositório do GitHub, que logo em seguida inicializa o GitHub Actions, no qual executa um template de infraestrtura do CloudFormation AWS, onde provisionar o ambiente e deploy da aplicação que estará rodando em um container Docker dentro da infraestrutura da AWS Cloud.
 
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
+# Topologia 
+![image](https://user-images.githubusercontent.com/55636741/94643648-b5606500-02bd-11eb-9865-0c4fa9a32270.png)
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+# Pré-requisitos 
+* Você criará um novo repositório template no GitHub, a partir do repositorio: > https://github.com/jerryjmp/TesteIA.git 
 
-Pipeline da aplicação Hello World utilizando as ferramentas abaixo:
-* Aplicação: HTML / PHP 
-* Container: Docker 
-* Web Server: Apache
-* Repositório: GitHub  
-* CI/CD: Git Hub Actions
-* IAC: CloudFormation
-* Cloud: AWS
-* Monitoração da aplicação: AWS CloudWatch
-
-# Diagrama da solução 
-
-
-
-
-
-
-# Nova execuçõ!
-
-  - Importar o repositorio https://github.com/jerryjmp/TesteIA  
-    git clone https://github.com/jerryjmp/TesteIA
-  - Atualizar o arquivo template 
-  - 
-  - 
-  - Atualizar o arquivo index.php e realizar um push.
-    git add . 
-    git commit -m "Teste IA"
-    git push
-
-You can also:
-  - Import and save files from GitHub, Dropbox, Google Drive and One Drive
-  - Drag and drop markdown and HTML files into Dillinger
-  - Export documents as Markdown, HTML and PDF
-
-Markdown is a lightweight markup language based on the formatting conventions that people naturally use in email.  As [John Gruber] writes on the [Markdown site][df1]
-
-> The overriding design goal for Markdown's
-> formatting syntax is to make it as readable
-> as possible. The idea is that a
-> Markdown-formatted document should be
-> publishable as-is, as plain text, without
-> looking like it's been marked up with tags
-> or formatting instructions.
-
-This text you see here is *actually* written in Markdown! To get a feel for Markdown's syntax, type some text into the left window and watch the results in the right.
-
-### Tech
-
-Dillinger uses a number of open source projects to work properly:
-
-* [AngularJS] - HTML enhanced for web apps!
-* [Ace Editor] - awesome web-based text editor
-* [markdown-it] - Markdown parser done right. Fast and easy to extend.
-* [Twitter Bootstrap] - great UI boilerplate for modern web apps
-* [node.js] - evented I/O for the backend
-* [Express] - fast node.js network app framework [@tjholowaychuk]
-* [Gulp] - the streaming build system
-* [Breakdance](https://breakdance.github.io/breakdance/) - HTML to Markdown converter
-* [jQuery] - duh
-
-And of course Dillinger itself is open source with a [public repository][dill]
- on GitHub.
-
-### Installation
-
-Dillinger requires [Node.js](https://nodejs.org/) v4+ to run.
-
-Install the dependencies and devDependencies and start the server.
-
+![image](https://user-images.githubusercontent.com/55636741/94646712-38d18480-02c5-11eb-8384-224a06c17b89.png) 
+* Após a criação do repostório no passo acima, é necessário alterar o arquivo: infraaws-template-ia.yml no bloco: 
+                
 ```sh
-$ cd dillinger
-$ npm install -d
-$ node app
+De:   
+                sudo git clone https://github.com/jerryjmp/TesteIA.git
+                sudo mv /git/Dockerfile /TesteIA
+                sudo cd /TesteIA
+                sudo systemctl start docker
+                sudo docker build -t app_hello_world /TesteIA/
 ```
-
-For production environments...
-
-```sh
-$ npm install --production
-$ NODE_ENV=production node app
+            
+    Para:       
+```sh           sudo git clone https://github.com/Sua_Conta/Seu_Repositorio.git
+                sudo mv /git/Dockerfile /Seu_Repositorio
+                sudo cd /Seu_Repositorio
+                sudo systemctl start docker
+                sudo docker build -t app_hello_world /Seu_Repositorio/  
 ```
+* Crie dois secrets no GitHub para a chave de acesso em seu repositório do GitHub em Settings > Secrets. Como alternativa, você pode criar esses secrets no nível da organização do GitHub e conceder acesso aos secrets para seu novo repositório.
 
-### Plugins
+    Crie um secrets chamado AWS_ACCESS_KEY_ID contendo o valor AccessKeyId do seu usuário da conta AWS.
+    Crie um secrets denominado AWS_SECRET_ACCESS_KEY contendo o valor SecretAccessKey do seu usuário da conta AWS.
 
-Dillinger is currently extended with the following plugins. Instructions on how to use them in your own application are linked below.
+![image](https://user-images.githubusercontent.com/55636741/94648782-9f58a180-02c9-11eb-9d86-088b782b55e8.png) 
 
-| Plugin | README |
-| ------ | ------ |
-| Dropbox | [plugins/dropbox/README.md][PlDb] |
-| GitHub | [plugins/github/README.md][PlGh] |
-| Google Drive | [plugins/googledrive/README.md][PlGd] |
-| OneDrive | [plugins/onedrive/README.md][PlOd] |
-| Medium | [plugins/medium/README.md][PlMe] |
-| Google Analytics | [plugins/googleanalytics/README.md][PlGa] |
+* Realize uma atualização no arquivo index.php, deixando conforme a linha abaixo:  
+  ```sh
+  <?php echo "<p>Hello World!</p>"; ?>  
+   ``` 
 
-
-### Development
-
-Want to contribute? Great!
-
-Dillinger uses Gulp + Webpack for fast developing.
-Make a change in your file and instantaneously see your updates!
-
-Open your favorite Terminal and run these commands.
-
-First Tab:
-```sh
-$ node app
+# Deploy
+ * Realize a atualização do repositório com os comandos abaixo:
+ ```sh
+$ cd /path_repositorio_tempalte
+$ git add . 
+$ git commit -m "Deploy"
+$ git push 
 ```
+* Aguardar a criação da infraestrutura e publicação do Website.
+* Para validar o pipeline e criação do website, basta entrar na sua console da AWS, e validar a criação da instância EC2 e abrir o DNS IPv4 no seu browser e resultado será conforme abaixo: 
 
-Second Tab:
-```sh
-$ gulp watch
-```
+![image](https://user-images.githubusercontent.com/55636741/94654286-39711780-02d3-11eb-9403-104bc417129e.png)
 
-(optional) Third:
-```sh
-$ karma test
-```
-#### Building for source
-For production release:
-```sh
-$ gulp build --prod
-```
-Generating pre-built zip archives for distribution:
-```sh
-$ gulp build dist --prod
-```
-### Docker
-Dillinger is very easy to install and deploy in a Docker container.
-
-By default, the Docker will expose port 8080, so change this within the Dockerfile if necessary. When ready, simply use the Dockerfile to build the image.
-
-```sh
-cd dillinger
-docker build -t joemccann/dillinger:${package.json.version} .
-```
-This will create the dillinger image and pull in the necessary dependencies. Be sure to swap out `${package.json.version}` with the actual version of Dillinger.
-
-Once done, run the Docker image and map the port to whatever you wish on your host. In this example, we simply map port 8000 of the host to port 8080 of the Docker (or whatever port was exposed in the Dockerfile):
-
-```sh
-docker run -d -p 8000:8080 --restart="always" <youruser>/dillinger:${package.json.version}
-```
-
-Verify the deployment by navigating to your server address in your preferred browser.
-
-```sh
-127.0.0.1:8000
-```
-
-#### Kubernetes + Google Cloud
-
-See [KUBERNETES.md](https://github.com/joemccann/dillinger/blob/master/KUBERNETES.md)
+# Monitação
+* Será utilizada a ferramenta Amazon CloudWatch com as métricas padrão para o website Hello World. 
 
 
-### Todos
-
- - Write MORE Tests
- - Add Night Mode
-
-License
-----
-
-MIT
 
 
-**Free Software, Hell Yeah!**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 [//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
 
