@@ -1,4 +1,4 @@
-# Teste DevOps
+# Esteira - simple DevOps
 Descrição:
 Este repositório contém um simples website com um fluxo de trabalho, sendo iniciado após atualização do repositório do GitHub, que logo em seguida inicializa o GitHub Actions, no qual executa um template de infraestrtura do CloudFormation AWS, onde provisionar o ambiente e deploy da aplicação que estará rodando em um container Docker dentro da infraestrutura da AWS Cloud.
 
