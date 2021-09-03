@@ -86,7 +86,7 @@ Resources:
             gitclone:
               command: |
                 sudo git init
-                sudo git clone https://github.com/jerryjmp/Simple_DevOps
+                sudo git clone https://github.com/jerryjmp/devops
                 sudo mv /git/Dockerfile /TesteIA
                 sudo cd /TesteIA
                 sudo systemctl start docker
